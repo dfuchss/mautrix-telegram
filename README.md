@@ -1,3 +1,10 @@
+# mautrix-telegram (FORK)
+Basically this fork provides a Dockerfile that only depends on the alpine image.
+The compilation of [LottieConverter](https://github.com/sot-tech/LottieConverter) as found in [mau.dev/tulir/lottieconverter](https://mau.dev/tulir/lottieconverter/) has been adopted to a builder part in the Dockerfile.
+Therefore, the image is suitable for building on Raspberry Pi (e.g. arm).
+
+**Original File follows ..**
+
 # mautrix-telegram
 ![Languages](https://img.shields.io/github/languages/top/tulir/mautrix-telegram.svg)
 [![License](https://img.shields.io/github/license/tulir/mautrix-telegram.svg)](LICENSE)

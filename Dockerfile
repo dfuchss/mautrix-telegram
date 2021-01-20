@@ -1,6 +1,22 @@
-FROM dock.mau.dev/tulir/lottieconverter:alpine-3.12
+FROM alpine:3.12 AS builder
 
-ARG TARGETARCH=amd64
+RUN apk add --no-cache git build-base cmake libpng-dev zlib-dev
+
+# Install rlottie
+RUN git clone https://github.com/Samsung/rlottie.git && cd rlottie && git checkout ad9beae
+WORKDIR /rlottie/build
+RUN cmake .. && make install
+
+WORKDIR /
+RUN git clone https://github.com/sot-tech/LottieConverter && cd LottieConverter && git checkout e515646
+RUN cd LottieConverter && make CONF=Release
+
+FROM alpine:3.12
+
+# Copy Lottie Converter
+COPY --from=builder /usr/lib/librlottie.so* /usr/lib/
+COPY --from=builder /LottieConverter/dist/Release/GNU-Linux/lottieconverter /usr/bin/lottieconverter
+RUN apk add --no-cache zlib libpng
 
 RUN echo $'\
 @edge http://dl-cdn.alpinelinux.org/alpine/edge/main\n\
