@@ -87,7 +87,7 @@ class Puppet(BasePuppet):
                  username: Optional[str] = None,
                  displayname: Optional[str] = None,
                  displayname_source: Optional[TelegramID] = None,
-                 displayname_contact: bool = False,
+                 displayname_contact: bool = True,
                  photo_id: Optional[str] = None,
                  is_bot: bool = False,
                  is_registered: bool = False,
@@ -270,8 +270,10 @@ class Puppet(BasePuppet):
             allow_because = "user is the primary source"
         elif not isinstance(info, UpdateUserName) and not info.contact:
             allow_because = "user is not a contact"
-        elif self.displayname_source is None:
+        elif not self.displayname_source:
             allow_because = "no primary source set"
+        elif not self.displayname:
+            allow_because = "user has no name"
         else:
             return False
 
@@ -280,7 +282,10 @@ class Puppet(BasePuppet):
         if not info.contact:
             self.displayname_contact = False
         elif not self.displayname_contact:
-            return False
+            if not self.displayname:
+                self.displayname_contact = True
+            else:
+                return False
 
         displayname = self.get_displayname(info)
         if displayname != self.displayname:
