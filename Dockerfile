@@ -1,9 +1,9 @@
-FROM alpine:3.12 AS builder
+FROM alpine:3.13 AS builder
 
 RUN apk add --no-cache git build-base cmake libpng-dev zlib-dev
 
 # Install rlottie
-RUN git clone https://github.com/Samsung/rlottie.git && cd rlottie && git checkout ad9beae
+RUN git clone https://github.com/Samsung/rlottie.git && cd rlottie && git checkout bd4c4e1
 WORKDIR /rlottie/build
 RUN cmake .. && make install
 
@@ -18,10 +18,10 @@ COPY --from=builder /usr/lib/librlottie.so* /usr/lib/
 COPY --from=builder /LottieConverter/dist/Release/GNU-Linux/lottieconverter /usr/bin/lottieconverter
 RUN apk add --no-cache zlib libpng
 
-RUN echo $'\
-@edge http://dl-cdn.alpinelinux.org/alpine/edge/main\n\
-@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing\n\
-@edge http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
+#RUN echo $'\
+#@edge http://dl-cdn.alpinelinux.org/alpine/edge/main\n\
+#@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing\n\
+#@edge http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
 
 RUN apk add --no-cache \
       python3 py3-pip py3-setuptools py3-wheel \
@@ -30,11 +30,11 @@ RUN apk add --no-cache \
       py3-aiohttp \
       py3-magic \
       py3-sqlalchemy \
-      py3-telethon-session-sqlalchemy@edge \
-      py3-alembic@edge \
+      py3-telethon-session-sqlalchemy \
+      py3-alembic \
       py3-psycopg2 \
       py3-ruamel.yaml \
-      py3-commonmark@edge \
+      py3-commonmark \
       # Indirect dependencies
       py3-idna \
       #moviepy
@@ -48,7 +48,7 @@ RUN apk add --no-cache \
         py3-pysocks \
         # cryptg
           py3-cffi \
-	  py3-qrcode@edge \
+	  py3-qrcode \
       py3-brotli \
       # Other dependencies
       ffmpeg \
@@ -63,7 +63,7 @@ RUN apk add --no-cache \
       bash \
       curl \
       jq \
-      yq@edge
+      yq
 
 COPY requirements.txt /opt/mautrix-telegram/requirements.txt
 COPY optional-requirements.txt /opt/mautrix-telegram/optional-requirements.txt
