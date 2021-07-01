@@ -1,4 +1,4 @@
-FROM alpine:3.13 AS builder
+FROM alpine:3.14 AS builder
 
 RUN apk add --no-cache git build-base cmake libpng-dev zlib-dev
 
@@ -11,7 +11,7 @@ WORKDIR /
 RUN git clone https://github.com/sot-tech/LottieConverter && cd LottieConverter && git checkout e515646
 RUN cd LottieConverter && make CONF=Release
 
-FROM alpine:3.12
+FROM alpine:3.14
 
 # Copy Lottie Converter
 COPY --from=builder /usr/lib/librlottie.so* /usr/lib/
@@ -30,6 +30,7 @@ RUN apk add --no-cache \
       py3-psycopg2 \
       py3-ruamel.yaml \
       py3-commonmark \
+      py3-prometheus-client \
       # Indirect dependencies
       py3-idna \
       #moviepy
@@ -41,6 +42,7 @@ RUN apk add --no-cache \
       #py3-telethon \ (outdated)
         # Optional for socks proxies
         py3-pysocks \
+        py3-pyaes \
         # cryptg
           py3-cffi \
 	  py3-qrcode \
@@ -51,7 +53,7 @@ RUN apk add --no-cache \
       su-exec \
       netcat-openbsd \
       # encryption
-      olm-dev \
+      py3-olm \
       py3-pycryptodome \
       py3-unpaddedbase64 \
       py3-future \
